@@ -11,6 +11,8 @@ import {
   useNotificationProvider,
 } from "@refinedev/antd";
 
+import { DashboardOutlined } from "@ant-design/icons";
+
 import "@refinedev/antd/dist/reset.css";
 
 import routerBindings, {
@@ -38,6 +40,8 @@ import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 import { AntdInferencer } from "@refinedev/inferencer/antd";
+
+import DashboardPage  from "./pages/dashboard/alterIndex";
 import { PropertyEdit } from "./pages/properties/edit";
 import {
   CaretakersList,
@@ -50,6 +54,8 @@ import { CustomerList, CustomerShow } from "./pages/customers";
 import { TenantList, TenantShow } from "./pages/tenants";
 import { ContractList, ContractShow } from "./pages/contracts";
 import { InvoiceList, InvoiceShow } from "./pages/invoices";
+
+import { crmDataProvider } from "./crm-provider";
 
 // import { UserList, UserCreate } from "./pages/users";
 
@@ -84,6 +90,7 @@ function App() {
                   dataProvider={{
                     default: dataProvider(FAKE_API_URL),
                     resys: dataProvider(RESYS_API_URL),
+                    crm: crmDataProvider,
                   }}
                   notificationProvider={useNotificationProvider}
                   routerProvider={routerBindings}
@@ -91,6 +98,15 @@ function App() {
                   accessControlProvider={accessControlProvider}
                   i18nProvider={i18nProvider}
                   resources={[
+                    {
+                      name: "dashboard",
+                      list: "/",
+                      meta: {
+                        label: "Dashboard",
+                        icon: <DashboardOutlined />,
+                        dataProviderName: "crm"
+                      },
+                    },
                     {
                       name: "properties",
                       list: "/properties",
@@ -232,11 +248,12 @@ function App() {
                         </Authenticated>
                       }
                     >
-                      <Route
+                      {/* <Route
                         index
                         // element={<NavigateToResource resource="blog_posts" />}
                         element={<NavigateToResource resource="properties" />}
-                      />
+                      /> */}
+                      <Route index element={<DashboardPage />} />
 
                       {/* <Route path="/posts">
                         <Route index element={<PostList />} />
@@ -300,7 +317,7 @@ function App() {
                         <Route index element={<InvoiceList />} />
                         <Route path="show/:id" element={<InvoiceShow />} />
                       </Route>
-                      
+
                       {/* <Route path="/users">
                         <Route index element={<UserList />} />
                         <Route path="create" element={<UserCreate />} />
